@@ -3,7 +3,7 @@ PROGRAM TO MAP CORE REGULATORY CIRCUITRY
 VERSION 1.0, December 2015
 SOFTWARE AUTHORS: Violaine Saint-Andre, Alexander J Federation, Charles Y. Lin
 REFERENCE: Models of Human Core Transcriptional Regulatory Circuitries.
-Violaine Saint-Andre#$, Alexander J. Federation#, Charles Y. Lin,  Brian J. Abraham, Jessica Reddy, Tong Ihn Lee, James E. Bradner$, Richard A. Young$
+Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin,  Brian J. Abraham, Jessica Reddy, Tong Ihn Lee, James E. Bradner, Richard A. Young
 CONTACT: youngcomputation@wi.mit.edu
 Developed using Python 2.7.3
 '''
