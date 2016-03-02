@@ -29,6 +29,9 @@ Code must be run from the directory in which it is stored together with TFlist_N
 
 The bam file of sequencing reads for H3K27ac must be sorted and indexed using SAMtools 
 
+Fasta files for the genome used must be placed in a directory that will be specified when runing the program (-f option). Those files must be split by chromosome and termed "chrN.fa" with N being the chromosome number. 
+They can be downloaded from http://hgdownload.cse.ucsc.edu/goldenPath/hg19/chromosomes/ (they will need to be unzipped)
+
 
 2) CONTENT
 -----------
