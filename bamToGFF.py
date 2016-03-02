@@ -1,17 +1,14 @@
-
 #bamToGFF.py
-
 #script to grab reads from a bam that align to a .gff file
+
 import sys
-
-sys.path.append('/nfs/young_ata/CYL_code/')
-
-from solexa import *
-from linU import *
 from collections import defaultdict
-
+from bamToGFFutils import *
 import os
 import string
+from string import join,upper,maketrans
+import re
+
 
 def parseSamHeader(samFile):
     '''parses any sam type file with a 3 column tab del header'''
@@ -29,18 +26,12 @@ def parseSamHeader(samFile):
     return samDict
 
 
-
-#THIS FUNCTION USED TO TRY TO LOOK UP THE UNIQUE NUMBER OF READS OR COMPUTE IT BUT WAS LATER EDITED
-#BRIAN BEING THAT GUY, YOU CAN FIX IT UP AND MAKE IT FIND YOUR UNIQUE MMR
 def getUniquelyMappingReads(bamFile):
-
     '''
     scripts designed to return the total number of uniquely mapping sequence tags from a bam file,
     first by looking for a corresponding stats file in the folder, and second by manually computing the number.
     '''
-    
     #a uniquely mapping sequence tag is defined by collapsing all tags that map to the exact same location with the exact same sequence
-
     #first try to extract the number from a stats file
     fullPath = os.path.abspath(bamFile)
     bamName = fullPath.split('/')[-1].split('.')[0]
@@ -56,13 +47,9 @@ def getUniquelyMappingReads(bamFile):
         print('USING STATS FILE %s' % (pathFolder+'/'+statsFile[0]))
         samDict = parseSamHeader(pathFolder+'/'+statsFile[0])
         return int(samDict['UniquelyMappingSequenceTags'])
-
     else:
         print('no precomputed stats file found for %s.' % (bamFile))
         return None
-        
-        
-
 
 
 def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,density = False,rpm = False,binSize = 25,clusterGram = None,matrix = None,raw = False,includeJxnReads = False):
@@ -82,8 +69,6 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
     newGFF = []
     #millionMappedReads
 
-
-    #SECTION CHANGED FOR BRIAN BEING THAT GUY
     if float(unique) == 0.0:
         unique = False
         if rpm:    
@@ -101,10 +86,7 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
 
 
     print('using a MMR value of %s' % (MMR))
-    
     senseTrans = maketrans('-+.','+-+')
-
-    
     if type(gff) == str:
         gff = parseTable(gff,'\t')
 
@@ -113,7 +95,7 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
         #first grab a header line
         line = gff[0]
         gffLocus = Locus(line[0],int(line[3]),int(line[4]),line[6],line[1])
-        
+
         nBins = gffLocus.len()/binSize
         binSizeList = [nBins]
 
@@ -125,11 +107,10 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
         binSizeList = uniquify(binSizeList)
         if len(binSizeList) > 1: 
             print('WARNING: lines in gff are of different length. Output clustergram will have variable row length')
-        newGFF.append(['GENE_ID','locusLine'] + [str(x*binSize)+'_'+bamFile.split('/')[-1] for x in range(1,max(binSizeList)+1,1)])        
-        
+        newGFF.append(['GENE_ID','locusLine'] + [str(x*binSize)+'_'+bamFile.split('/')[-1] for x in range(1,max(binSizeList)+1,1)])
     #setting up a maxtrix table
     if matrix:
-        newGFF.append(['GENE_ID','locusLine'] + ['bin_'+str(n)+'_'+bamFile.split('/')[-1] for n in range(1,int(matrix)+1,1)])        
+        newGFF.append(['GENE_ID','locusLine'] + ['bin_'+str(n)+'_'+bamFile.split('/')[-1] for n in range(1,int(matrix)+1,1)])
 
     #getting and processing reads for gff lines
     ticker = 0
@@ -157,11 +138,9 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
         else:
             senseReads = filter(lambda x:x.sense() == '-' or x.sense() == '.',extendedReads)
             antiReads = filter(lambda x:x.sense() == '+',extendedReads)
-    
+
         #at this point can output starts onto the GFF unless density is called
-
         if density:
-
             senseHash = defaultdict(int)
             antiHash = defaultdict(int)
 
@@ -171,7 +150,6 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
                     for x in range(read.start(),read.end()+1,1):
                         senseHash[x]+=1
             if sense == '-' or sense == 'both' or sense == '.':
-                #print('foo')
                 for read in antiReads:
                     for x in range(read.start(),read.end()+1,1):
                         antiHash[x]+=1
@@ -179,7 +157,7 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
             #now apply flooring and filtering for coordinates
             keys = uniquify(senseHash.keys()+antiHash.keys())
             if floor > 0:
-                    
+
                 keys = filter(lambda x: (senseHash[x]+antiHash[x]) > floor,keys)
             #coordinate filtering
             keys = filter(lambda x: gffLocus.start() < x < gffLocus.end(),keys)
@@ -214,7 +192,7 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
                         clusterLine+=[round(binDen/MMR,4)]
                         i = i-binSize
                 newGFF.append(clusterLine)
-        
+
             #for regular old density calculation
             else:
                 senseTotalDen = float(sum([senseHash[x] for x in keys]))/gffLocus.len()
@@ -246,8 +224,6 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
             newGFF.append(line+[readLine])
         #if not raw and not density gives total
         else:
-
-
             if sense == 'both' or sense == '.':
                 readLine = str((len(antiReads) + len(senseReads))/MMR)   
             elif sense == '+':
@@ -257,15 +233,7 @@ def mapBamToGFF(bamFile,gff,sense = 'both',unique = 0,extension = 200,floor = 0,
             newGFF.append(line+[readLine])
             
     return newGFF
-        
-                
-                
-            
 
-
-            
-                
-    
 def convertEnrichedRegionsToGFF(enrichedRegionFile):
     '''converts a young lab enriched regions file into a gff'''
     newGFF = []
@@ -278,9 +246,6 @@ def convertEnrichedRegionsToGFF(enrichedRegionFile):
         newGFF.append(newLine)
         i+=1
     return newGFF
-
-        
-#python bamToGFF.py --density --floor 0 -b test.sam.sorted.bam -g pol2_sample.gff -o pol2_sample_mapped.gff
 
 def main():
     from optparse import OptionParser
@@ -298,7 +263,7 @@ def main():
     parser.add_option("-s","--sense", dest="sense",nargs = 1, default='both',
                       help = "Map to '+','-' or 'both' strands. Default maps to both.")
     parser.add_option("-u","--unique", dest="unique",nargs = 1, default=0,
-                      help = "Takes only unique sequence tags (avoids pcr repeats). must provide number of million uniquely mapping reads") #BJA changed default from None to 0
+                      help = "Takes only unique sequence tags (avoids pcr repeats). must provide number of million uniquely mapping reads")
     parser.add_option("-d","--density", dest="density",action='store_true', default=False,
                       help = "Calculates a read density for each region, returns a single value per region")
     parser.add_option("-f","--floor", dest="floor",nargs =1, default=0,
@@ -335,7 +300,7 @@ def main():
             print('ERROR: no associated .bai file found with bam. Must use a sorted bam with accompanying index file')
             parser.print_help()
             exit()
-   
+
     if options.sense:
         if ['+','-','.','both'].count(options.sense) == 0:
             print('ERROR: sense flag must be followed by +,-,.,both')
@@ -363,8 +328,6 @@ def main():
             parser.print_help()
             exit()
 
-    
-    
     if options.input and options.bam:
         inputFile = options.input
         if inputFile.split('.')[-1] != 'gff':
@@ -374,7 +337,7 @@ def main():
             gffFile = inputFile
 
         bamFile = options.bam
-        
+
         if options.output == None:
             output = os.getcwd() + inputFile.split('/')[-1]+'.mapped'
         else:
@@ -385,7 +348,7 @@ def main():
         elif options.matrix:
             print('mapping to GFF and making a matrix with fixed bin number')
             newGFF = mapBamToGFF(bamFile,gffFile,options.sense,options.unique,int(options.extension),options.floor,options.density,options.rpm,25,None,options.matrix,False,options.jxn)
-            
+
         else:
             print('mapping to GFF and returning reads')
             if options.total:
@@ -396,9 +359,6 @@ def main():
         unParseTable(newGFF,output,'\t')
     else:
         parser.print_help()
-        
 
-        
- 
 if __name__ == "__main__":
     main()
