@@ -445,7 +445,7 @@ def formatNetworkOutput(graph, projectFolder, projectName, candidateGenes):
 
     #count the occurences of the TFs accross the loops
     dicoTFinloopsCounts={}
-    for clique in cliques:
+    for clique in cliqueList:
         for TF in clique:
 
             if dicoTFinloopsCounts.has_key(TF):
@@ -457,7 +457,7 @@ def formatNetworkOutput(graph, projectFolder, projectName, candidateGenes):
     #calculate a score by CRC
     cliqueRanking = []
 
-    for clique in cliques:
+    for clique in cliqueList:
         cliqueScore=0
 
         for TF in clique:
