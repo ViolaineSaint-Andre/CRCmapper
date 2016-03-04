@@ -25,7 +25,7 @@ To build Core Regulatory Circuitry from H3K27ac ChIP-seq data
 
 FIMO (Grant et al. 2011) from the MEME suite and SAMtools (http://www.htslib.org/) (Li et al., 2009) must be installed
 
-Code must be run from the directory in which it is stored together with TFlist_NMid_hg.txt, TFlist_NMid_ms.txt, VertebratePWMs.txt, MotifDictionary.txt, bamToGFF.py, utils.py and a directory named "annotation" containing the genome annotation files (hg19_refseq.ucsc, hg18_refseq.ucsc, mm9_refseq.ucsc) 
+Code must be run from the directory in which it is stored together with TFlist_NMid_hg.txt, TFlist_NMid_ms.txt, VertebratePWMs.txt, MotifDictionary.txt, bamToGFF.py, utils.py, bamToGFFutils.py and a directory named "annotation" containing the genome annotation files (hg19_refseq.ucsc, hg18_refseq.ucsc, mm9_refseq.ucsc) 
 
 The bam file of sequencing reads for H3K27ac must be sorted and indexed using SAMtools 
 
