@@ -1,7 +1,7 @@
 '''
 PROGRAM TO MAP CORE REGULATORY CIRCUITRY
 VERSION 1.0, December 2015
-SOFTWARE AUTHORS: Violaine Saint-Andre, Alexander J Federation, Charles Y. Lin
+SOFTWARE AUTHORS: Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin
 REFERENCE: Models of Human Core Transcriptional Regulatory Circuitries.
 Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin,  Brian J. Abraham, Jessica Reddy, Tong Ihn Lee, James E. Bradner, Richard A. Young
 CONTACT: youngcomputation@wi.mit.edu
@@ -160,8 +160,8 @@ def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNam
 
 def findCanidateTFs(annotationFile, superLoci, expressedNM, TFlist, refseqToNameDict, projectFolder, projectName):
     '''
-    Find all TFs within 1Mb od the SE center that are considered expressed 
-    Return a dictionary keyed by TF that points to a list of super-enhancer loci
+    find all TFs within 1Mb of the super-enhancer center that are considered expressed 
+    return a dictionary keyed by TF that points to a list of super-enhancer loci
     '''
 
     print 'FINDING CANIDATE TFs'
@@ -225,7 +225,7 @@ def formatOutput(TFandSuperDict, refseqToNameDict, projectName, projectFolder):
     '''
     takes as input the dictionary mapping TFs to all proximal super-enhancers
     returns a file that lists each candidate TFs
-    and gives the coordinates of the super enhancers around them
+    and gives the coordinates of the super-enhancers around them
     '''
 
     print 'CREATE CANDIDATE TFs AND SE TABLE'
