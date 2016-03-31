@@ -148,8 +148,7 @@ class LocusCollection:
         start = locus.start() / self.__winSize
         end = locus.end() / self.__winSize + 1 ## add 1 because of the range
         return range(start,end)
-    def __len__(self): return len(self.__loci)
-        
+    def __len__(self): return len(self.__loci)        
     def append(self,new): self.__addLocus(new)
     def extend(self,newList):
         for lcs in newList: self.__addLocus(lcs)
@@ -239,8 +238,7 @@ class LocusCollection:
         for locus in locusList:
             if oldCollection.hasLocus(locus):
                 oldCollection.remove(locus)
-                overlappingLoci = oldCollection.getOverlap(Locus(locus.chr(),locus.start()-stitchWindow,locus.end()+stitchWindow,locus.sense(),locus.ID()),sense)
-                
+                overlappingLoci = oldCollection.getOverlap(Locus(locus.chr(),locus.start()-stitchWindow,locus.end()+stitchWindow,locus.sense(),locus.ID()),sense)               
                 stitchTicker = 1
                 while len(overlappingLoci) > 0:
                     stitchTicker+=len(overlappingLoci)
@@ -474,7 +472,6 @@ class Bam:
     def getReadStarts(self,locus,sense = 'both',unique = False,includeJxnReads = False):
         reads = self.getRawReads(locus,sense,unique,includeJxnReads)
         return [int(read[3]) for read in reads]
-
 
     def getReadCount(self,locus,sense = 'both',unique = True,includeJxnReads = False):
         reads = self.getRawReads(locus,sense,unique,includeJxnReads)
