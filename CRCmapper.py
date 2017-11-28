@@ -95,7 +95,7 @@ def createSuperLoci(superTable, Enumber='super'):
 
     return output
 
-def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict):
+def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict,expressionTable)
     '''
     takes as input an activity table with refseq NMID in first column and expression or promoter
     acetylation level in a second column
@@ -119,7 +119,10 @@ def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNam
     for line in expressionTable[1:]:
         trid = line[0]
         geneName = refseqToNameDict[trid]
-        exp = float(line[2])
+            if len(expressionTable[1]) == 3: #when expressionTable is an output from bamToGFF.py
+                exp = float(line[2])
+            else: #when expressionTable is passed as an option (2 columns)
+                exp = float(line[1])
 
         # Store the expression value for each NMid in a dict, keep higher value if multiple identical NMIDs
         if trid in expressionDictNM and exp > expressionDictNM[trid]:
@@ -565,8 +568,9 @@ def main():
         if expressionFile:
             expressionTable = utils.parseTable(expressionFile, '\t')
         else:
-            expressionTable = calculatePromoterActivity(annotationFile, bamFile, projectName, projectFolder, refseqToNameDict)
-
+            calculatePromoterActivity(annotationFile, bamFile, projectName, projectFolder, refseqToNameDict)
+            expresionFilename = projectFolder + 'matrix.gff'
+            expressionTable = utils.parseTable(expresionFilename, '\t')
         if options.Enumber != 'super':
             enhancerNumber = options.Enumber
         else:
@@ -576,7 +580,7 @@ def main():
 
         superLoci = createSuperLoci(superTable)
 
-        expressedNM = createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict)
+        expressedNM = createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict, expressionTable)
 
         TFandSuperDict = findCanidateTFs(annotationFile, superLoci, expressedNM, TFlist, refseqToNameDict, projectFolder, projectName)
 
