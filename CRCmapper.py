@@ -4,7 +4,7 @@ VERSION 1.0, December 2015
 SOFTWARE AUTHORS: Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin
 REFERENCE: Models of Human Core Transcriptional Regulatory Circuitries.
 Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin,  Brian J. Abraham, Jessica Reddy, Tong Ihn Lee, James E. Bradner, Richard A. Young
-CONTACT: violaine.saint-andre@curie.fr
+CONTACT: violaine.saint-andre@pasteur.fr
 Developed using Python 2.7.3
 '''
 
