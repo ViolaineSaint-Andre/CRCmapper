@@ -10,7 +10,7 @@ Please cite this article when using this code.
 
 SOFTWARE AUTHORS: Violaine Saint-Andre, Alexander J. Federation, Charles Y. Lin. 
 
-CONTACT: violaine.saint-andre@curie.fr
+CONTACT: violaine.saint-andre@pasteur.fr
 
 Developed using Python 2.7.3
 
