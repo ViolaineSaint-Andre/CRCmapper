@@ -96,7 +96,7 @@ def createSuperLoci(superTable, Enumber='super'):
 
     return output
 
-def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict,expressionTable)
+def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNameDict,expressionTable):
     '''
     takes as input an activity table with refseq NMID in first column and expression or promoter
     acetylation level in a second column
