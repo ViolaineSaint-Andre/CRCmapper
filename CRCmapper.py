@@ -120,10 +120,10 @@ def createExpressionDict(annotationFile, projectFolder, projectName, refseqToNam
     for line in expressionTable[1:]:
         trid = line[0]
         geneName = refseqToNameDict[trid]
-            if len(expressionTable[1]) == 3: #when expressionTable is an output from bamToGFF.py
-                exp = float(line[2])
-            else: #when expressionTable is passed as an option (2 columns)
-                exp = float(line[1])
+        if len(expressionTable[1]) == 3: #when expressionTable is an output from bamToGFF.py
+            exp = float(line[2])
+        else: #when expressionTable is passed as an option (2 columns)
+            exp = float(line[1])
 
         # Store the expression value for each NMid in a dict, keep higher value if multiple identical NMIDs
         if trid in expressionDictNM and exp > expressionDictNM[trid]:
@@ -529,7 +529,7 @@ def main():
         genome = options.genome
         genome = upper(genome)
 
-         if genome == 'HG38':
+        if genome == 'HG38':
             annotationFile = './annotation/hg38_refseq.ucsc'
             TFfile = './TFlist_NMid_hg.txt'
 
