@@ -529,6 +529,10 @@ def main():
         genome = options.genome
         genome = upper(genome)
 
+         if genome == 'HG38':
+            annotationFile = './annotation/hg38_refseq.ucsc'
+            TFfile = './TFlist_NMid_hg.txt'
+
         if genome == 'HG19':
             annotationFile = './annotation/hg19_refseq.ucsc'
             TFfile = './TFlist_NMid_hg.txt'
@@ -536,6 +540,10 @@ def main():
         if genome == 'HG18':
             annotationFile = './annotation/hg18_refseq.ucsc'
             TFfile = './TFlist_NMid_hg.txt'
+
+        if genome == 'MM10':
+            annotationFile = './annotation/mm10_refseq.ucsc'
+            TFfile = './TFlist_NMid_ms.txt'
 
         if genome == 'MM9':
             annotationFile = './annotation/mm9_refseq.ucsc'
