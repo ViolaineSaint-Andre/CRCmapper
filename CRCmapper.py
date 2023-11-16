@@ -381,7 +381,7 @@ def buildNetwork(projectFolder, projectName, candidateGenes, refseqToNameDict, m
     for line in fimoTable[1:]:
 
         source = motifDatabaseDict[line[0]]
-        region = line[1].split('|')
+        region = line[2].split('|') 
         target = refseqToNameDict[region[0]]
         location = (region[1], int(region[2]), int(region[3]))
 
@@ -393,9 +393,9 @@ def buildNetwork(projectFolder, projectName, candidateGenes, refseqToNameDict, m
             edgeCountDictSE[(source,target)] = 0
 
         # Count unique motifs
-        if (region[1], int(region[2]) + int(line[2]), int(region[2]) + int(line[3])) not in motifDictSE[source]:
+        if (region[1], int(region[2]) + int(line[3]), int(region[2]) + int(line[4])) not in motifDictSE[source]: 
             edgeCountDictSE[(source, target)] += 1
-            motifDictSE[source].append((region[1], int(region[2]) + int(line[2]), int(region[2]) + int(line[3])))
+            motifDictSE[source].append((region[1], int(region[2]) + int(line[3]), int(region[2]) + int(line[4])))
 
     # Draw an edge if there are at least 3 motif instances in the sum of the merged extended SE constituents
     for connection in edgeCountDictSE.keys():
